@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Maps</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  </head>
+
+  </head>
+  <body>
+    <div class="container">
+        <div class="map">Alternative content</div>
+    </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"> </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/jquery.mapael.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/maps/world_countries_mercator.min.js"></script>
+<script type="text/javascript">
+
+var data1 = [];
+$.ajax({
+  type: "GET",
+  url: "expenditureEducationExp.json",
+  dataType: "text",
+  success: function(response)
+  {
+    	var data = JSON.parse(response);
+      data1 = [ ['País', "% dos Gastos em Educação"] ];
+      for(var i in data['Country'])
+        data1.push([data['Country'][i], Math.floor(data['%'][i]*1) ]);
+      console.log(data1);
+      //drawRegionsMap(data1);
+
+      $(".container").mapael({
+          map : {
+              name : "world_countries_mercator"
+          },
+                legend: {
+                    area: {
+                        title: "Population of France by department",
+                        slices: [
+                            {
+                                max: 300000,
+                                attrs: {
+                                    fill: "#97e766"
+                                },
+                                label: "Less than de 300 000 inhabitants"
+                            },
+                            {
+                                min: 300000,
+                                max: 500000,
+                                attrs: {
+                                    fill: "#7fd34d"
+                                },
+                                label: "Between 100 000 and 500 000 inhabitants"
+                            },
+                            {
+                                min: 500000,
+                                max: 1000000,
+                                attrs: {
+                                    fill: "#5faa32"
+                                },
+                                label: "Between 500 000 and 1 000 000 inhabitants"
+                            },
+                            {
+                                min: 1000000,
+                                attrs: {
+                                    fill: "#3f7d1a"
+                                },
+                                label: "More than 1 million inhabitants"
+                            }
+                        ]
+                    }
+                },
+          areas: {
+                    "US": {
+                        value: "2617939",
+                        href: "#",
+                        tooltip: {content: "<span style=\"font-weight:bold;\">Nord (59)</span><br />Population : 2617939"}
+                    }
+          }
+      });
+
+  }
+});
+</script>
+  </body>
+</html>
