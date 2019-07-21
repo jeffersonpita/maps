@@ -1,22 +1,90 @@
 <html>
   <head>
     <title>Maps</title>
+    <meta charset="UTF-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style type="text/css">
+        body {
+            color: #5d5d5d;
+            font-family: Helvetica, Arial, sans-serif;
+        }
 
+        h1 {
+            font-size: 30px;
+            margin: auto;
+            margin-top: 50px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        /* Specific mapael css class are below
+         * 'mapael' class is added by plugin
+        */
+
+        .mapael .map {
+            position: relative;
+        }
+
+        .mapael .mapTooltip {
+            position: absolute;
+            background-color: #fff;
+            moz-opacity: 0.70;
+            opacity: 0.70;
+            filter: alpha(opacity=70);
+            border-radius: 10px;
+            padding: 10px;
+            z-index: 1000;
+            max-width: 200px;
+            display: none;
+            color: #343434;
+        }
+    </style>
   </head>
 
   </head>
   <body>
-    <div class="container">
-        <div class="map">Alternative content</div>
+    <div class="mapcontainer">
+        <div class="map">
+            <span>Alternative content for the map</span>
+        </div>
+        <div class="areaLegend">
+            <span>Alternative content for the legend</span>
+        </div>
     </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/jquery.mapael.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/maps/world_countries_mercator.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/maps/world_countries_miller.min.js"></script>
+<script src="countries.js"></script>
 <script type="text/javascript">
 
-var data1 = [];
+var objmap = {
+    map : {
+        name : "world_countries_miller",
+         zoom: {
+          enabled: true,
+          touch: true,
+          maxLevel: 450,
+          "animDuration": 0,
+          init: {
+            level: 10,
+            latitude: 48.76,
+            longitude: -1.6
+          }
+        }
+    },
+    legend: {
+      area: {
+        title: "% of Public Expenses in Education",
+      }
+    },
+    areas: {
+    }
+};
+var colors = [ "#EEFFBA", "#D6FA8C", "#BEED53", "#A5D721", "#82B300", "#5D8700"];
 $.ajax({
   type: "GET",
   url: "expenditureEducationExp.json",
@@ -24,62 +92,47 @@ $.ajax({
   success: function(response)
   {
     	var data = JSON.parse(response);
-      data1 = [ ['País', "% dos Gastos em Educação"] ];
-      for(var i in data['Country'])
-        data1.push([data['Country'][i], Math.floor(data['%'][i]*1) ]);
-      console.log(data1);
-      //drawRegionsMap(data1);
+      var areas = {};
+      var min = 0;
+      var max = 0;
+      for(var i in data['Country']){
+        var val = (data['%'][i]*1);
+        var arr = { value: val, href:'', tooltip:{content: "<span style=\"font-weight:bold;\">"+data['Country'][i]+"</span><br />"+val+'%'} };
+        areas[getCountryCode(data['Country'][i])] = arr;
 
-      $(".container").mapael({
-          map : {
-              name : "world_countries_mercator"
-          },
-                legend: {
-                    area: {
-                        title: "Population of France by department",
-                        slices: [
-                            {
-                                max: 300000,
-                                attrs: {
-                                    fill: "#97e766"
-                                },
-                                label: "Less than de 300 000 inhabitants"
-                            },
-                            {
-                                min: 300000,
-                                max: 500000,
-                                attrs: {
-                                    fill: "#7fd34d"
-                                },
-                                label: "Between 100 000 and 500 000 inhabitants"
-                            },
-                            {
-                                min: 500000,
-                                max: 1000000,
-                                attrs: {
-                                    fill: "#5faa32"
-                                },
-                                label: "Between 500 000 and 1 000 000 inhabitants"
-                            },
-                            {
-                                min: 1000000,
-                                attrs: {
-                                    fill: "#3f7d1a"
-                                },
-                                label: "More than 1 million inhabitants"
-                            }
-                        ]
-                    }
-                },
-          areas: {
-                    "US": {
-                        value: "2617939",
-                        href: "#",
-                        tooltip: {content: "<span style=\"font-weight:bold;\">Nord (59)</span><br />Population : 2617939"}
-                    }
-          }
-      });
+        if(max==0 || val>max)
+          max = val;
+        if(min==0 || val<min)
+          min = val;
+        if(getCountryCode(data['Country'][i])==data['Country'][i])
+          console.log(getCountryCode(data['Country'][i]));
+      }
 
+      max -= 15;
+      var sl = (max-min)/colors.length;
+      var y = min;
+      var slices = [];
+      for(var i=0;i<colors.length; i++){
+        var slice = { attrs:{fill: colors[i]} };
+        slice.min = y;
+        slice.max = y+sl;
+        slice.label = 'Between '+Math.round(slice.min)+'% and '+Math.round(slice.max)+'%';
+        if(i==0){
+          delete slice['min'];
+          slice.label = 'More than '+Math.round(slice.max)+'%';
+        }
+        if(i==colors.length-1){
+          delete slice['max'];
+          slice.label = 'At least '+Math.round(slice.min)+'%';
+        }
+
+        slices.push(slice);
+        y+=sl;
+      }
+
+      objmap.legend.area.slices = slices;
+      objmap.areas = areas;
+      $(".mapcontainer").mapael(objmap);
   }
 });
 </script>
