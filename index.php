@@ -11,14 +11,14 @@ if($type==1){
   $filename = "expenditureEducationExp.json";
   $title = "% of Public Expenses in Education";
   $max = 15;
-  $source = "Source: http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
+  $source = "http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
 
 } else if($type==2){
   $filename = "expenditureEducationGDP.json";
   $title = "% of GDP in Public Expenses in Education";
   $max = 5;
   $color = "purple";
-  $source = "Source: http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
+  $source = "http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
 }
 
 ?>
@@ -41,7 +41,8 @@ if($type==1){
 
         .mapcontainer {
             mmax-width: 800px;
-            margin: auto;
+            mmargin: auto;
+            width: 98%;
             position: relative;
         }
 
@@ -81,14 +82,14 @@ if($type==1){
     </select>
     <div class="mapcontainer">
         <div class="map">
-            <span>Alternative content for the map</span>
+            <span>&nbsp;</span>
         </div>
         <div class="areaLegend">
-            <span>Alternative content for the legend</span>
+            <span>&nbsp;</span>
         </div>
     </div>
-    
-    <div class="source"><?=$source?></div>
+    <br>
+    <div class="source"><a href="<?=$source?>" target="new"><?=$source?></a><br>jeffersonpita@yahoo.com.br</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/jquery.mapael.js"></script>
