@@ -1,3 +1,27 @@
+<?
+$type = 1;
+
+$max = 0;
+if(isset($_GET['t']) && $_GET['t']!=null)
+  $type = $_GET['t']*1;
+
+$color = "green";
+
+if($type==1){
+  $filename = "expenditureEducationExp.json";
+  $title = "% of Public Expenses in Education";
+  $max = 15;
+  $source = "Source: http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
+
+} else if($type==2){
+  $filename = "expenditureEducationGDP.json";
+  $title = "% of GDP in Public Expenses in Education";
+  $max = 5;
+  $color = "purple";
+  $source = "Source: http://data.un.org/_Docs/SYB/PDFs/SYB62_T07_Education.pdf";
+}
+
+?>
 <html>
   <head>
     <title>Maps</title>
@@ -15,9 +39,10 @@
             margin-top: 50px;
         }
 
-        .container {
-            max-width: 800px;
+        .mapcontainer {
+            mmax-width: 800px;
             margin: auto;
+            position: relative;
         }
 
         /* Specific mapael css class are below
@@ -41,11 +66,19 @@
             display: none;
             color: #343434;
         }
+        .areaLegend {
+          position: absolute;
+          bottom:0px;
+        }
     </style>
   </head>
 
   </head>
   <body>
+    <select id="seltype" onchange="document.location='?t='+this.value;">
+      <option value="1">% of Public Expenses in Education</option>
+      <option value="2">% of GDP in Public Expenses in Education</option>
+    </select>
     <div class="mapcontainer">
         <div class="map">
             <span>Alternative content for the map</span>
@@ -54,40 +87,53 @@
             <span>Alternative content for the legend</span>
         </div>
     </div>
+    
+    <div class="source"><?=$source?></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"> </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/jquery.mapael.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-mapael/2.2.0/js/maps/world_countries_miller.min.js"></script>
 <script src="countries.js"></script>
 <script type="text/javascript">
-
+$('#seltype').val("<?=$type?>");
+/*
+zoom: {
+ enabled: true,
+ touch: true
+},,
+maxLevel: 450,
+"animDuration": 1000,
+init: {
+  level: 10,
+  latitude: 48.76,
+  longitude: -1.6
+}*/
 var objmap = {
     map : {
         name : "world_countries_miller",
-         zoom: {
-          enabled: true,
-          touch: true,
-          maxLevel: 450,
-          "animDuration": 0,
-          init: {
-            level: 10,
-            latitude: 48.76,
-            longitude: -1.6
+
+        defaultArea:{
+          attrs:{
+            fill: "#DDDDDD"
           }
         }
     },
     legend: {
       area: {
-        title: "% of Public Expenses in Education",
+        title: "<?=$title?>",
       }
     },
     areas: {
     }
 };
 var colors = [ "#EEFFBA", "#D6FA8C", "#BEED53", "#A5D721", "#82B300", "#5D8700"];
+if("<?=$color?>"=="purple"){
+  colors = ["#E1BEE7", "#CE93D8", "#BA68C8", "#AB47BC", "#9C27B0", "#7B1FA2"];
+}
+
 $.ajax({
   type: "GET",
-  url: "expenditureEducationExp.json",
+  url: "<?=$filename?>",
   dataType: "text",
   success: function(response)
   {
@@ -108,7 +154,7 @@ $.ajax({
           console.log(getCountryCode(data['Country'][i]));
       }
 
-      max -= 15;
+      max -= "<?=$max?>";
       var sl = (max-min)/colors.length;
       var y = min;
       var slices = [];
