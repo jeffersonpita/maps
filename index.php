@@ -40,8 +40,6 @@ if($type==1){
         }
 
         .mapcontainer {
-            mmax-width: 800px;
-            mmargin: auto;
             width: 98%;
             position: relative;
         }
@@ -74,7 +72,6 @@ if($type==1){
     </style>
   </head>
 
-  </head>
   <body>
     <select id="seltype" onchange="document.location='?t='+this.value;">
       <option value="1">% of Public Expenses in Education</option>
