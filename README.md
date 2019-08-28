@@ -3,7 +3,9 @@
 
 Available at: http://mapdata.rf.gd
 
-![01](https://github.com/jeffersonpita/maps/blob/master/prints/01.png)
+![% Public Expenses in Education](https://github.com/jeffersonpita/maps/blob/master/prints/01.png)
+![% of GDP in Public Expenses in Education](https://github.com/jeffersonpita/maps/blob/master/prints/02.png)
+![Active Fires 2019-08-24](https://github.com/jeffersonpita/maps/blob/master/prints/03.png)
 
 
 
