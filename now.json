@@ -3,5 +3,5 @@
     "builds": [
       { "src": "index.php", "use": "now-php" }
     ],
-    "routes":{[{"src":"/data/(.*)", "dest":"/data/$1"}]}
+    "routes":[{"src":"/data/(.*)", "dest":"/data/$1"}]
 }
