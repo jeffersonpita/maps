@@ -4,6 +4,6 @@
       { "src": "index.php", "use": "now-php" }
     ],
     "routes":[
-      { "src": "/(.*)", "dest": "/" }
+      { "src": "/(.*)", "dest": "/$1" }
     ]
 }
