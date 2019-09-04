@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "builds": [
+      { "src": "old.php", "use": "@now/php" },
+      { "src": "new.php", "use": "now-php" }
+    ]
+}
